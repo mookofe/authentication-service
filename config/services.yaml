@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    aws.credentials.class: 'Aws\Credentials\Credentials'
 
 services:
     # default configuration for services in *this* file
@@ -23,5 +24,21 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    aws.credentials:
+      class: Aws\Credentials\Credentials
+      arguments:
+        - '%env(AWS_KEY)%'
+        - '%env(AWS_SECRET)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    Aws\CognitoIdentityProvider\CognitoIdentityProviderClient:
+        arguments:
+            - { credentials: '@aws.credentials', region: '%env(AWS_REGION)%', version: '%env(AWS_VERSION)%' }
+
+    App\Service\CognitoAuthenticationProvider:
+        arguments:
+            $clientId: '%env(AWS_COGNITO_CLIENT_ID)%'
+            $clientSecret: '%env(AWS_COGNITO_CLIENT_SECRET)%'
+            $poolId: '%env(AWS_COGNITO_POOL_ID)%'
