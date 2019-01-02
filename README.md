@@ -1,6 +1,6 @@
-# Movie Edge Service
+# Authentication Service
 
-Public facing service that proxy requests from external users to multiple Microservices.
+Provides user Authentication and Authorization to the system using a third party provider.
 
 - [Stack](#stack)
 - [Installation](#installation)
